@@ -51,6 +51,35 @@ public class PostServiceImpl implements PostService {
         return matToDto(post);
     }
 
+    @Override
+    public PostDto updatePost(PostDto postDto, long id) {
+
+        //pegar do db um registo com esse id e vetificar a existencia
+        Post post = postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+
+        //salvar a atualização com o obj dto vindo da requisição
+        post.setTitle(postDto.getTitle());
+        post.setDescription(postDto.getDescription());
+        post.setContent(postDto.getContent());
+
+        //salvar no db a atualização
+        Post updatePost = postRepository.save(post);
+
+        return matToDto(updatePost);
+
+    }
+
+    @Override
+    public void deletePostByid(long id) {
+        //pegar do db um registo com esse id e vetificar a existencia
+        Post post = postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Post", "id", id));
+
+        postRepository.delete(post);
+    }
+
+
+
+
     //metodo para converter o entity em dto
     private PostDto matToDto(Post post){
 
@@ -78,6 +107,10 @@ public class PostServiceImpl implements PostService {
         return post;
 
     }
+
+   
+
+   
 
    
 
