@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.blog.sprinapi.payload.PostDto;
+import com.spring.blog.sprinapi.payload.PostResponse;
 import com.spring.blog.sprinapi.service.PostService;
 
 @RestController
@@ -32,8 +34,8 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostDto> getlAllPosts(){
-        return postService.getlAllPosts();
+    public PostResponse getlAllPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo, @RequestParam(value="pageSize",  defaultValue = "0", required = false) int pageSize){
+        return postService.getlAllPosts(pageNo, pageSize);
     }
 
     @GetMapping("/{id}")

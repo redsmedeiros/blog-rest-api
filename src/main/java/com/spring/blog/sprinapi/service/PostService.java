@@ -1,15 +1,15 @@
 package com.spring.blog.sprinapi.service;
 
-import java.util.List;
 
 import com.spring.blog.sprinapi.payload.PostDto;
+import com.spring.blog.sprinapi.payload.PostResponse;
 
 
 public interface PostService {
 
     PostDto createPost(PostDto postDto);
 
-    List<PostDto> getlAllPosts();
+    PostResponse getlAllPosts(int pageNo, int pageSize);
 
     PostDto getPostById(long id);
 
