@@ -1,13 +1,10 @@
 package com.spring.blog.sprinapi.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,4 +28,8 @@ public class Post {
 
     @Column(nullable = false)
     private String content;
+
+    //fazer a relação com a tabela de comentarios
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments = new HashSet<>(); //é uma estrutura de dados que armazena elementos únicos, ou seja, não há elementos duplicados dentro dela. 
 }
