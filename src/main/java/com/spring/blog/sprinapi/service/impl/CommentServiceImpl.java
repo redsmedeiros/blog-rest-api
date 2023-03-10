@@ -2,12 +2,17 @@ package com.spring.blog.sprinapi.service.impl;
 
 import com.spring.blog.sprinapi.entity.Comment;
 import com.spring.blog.sprinapi.entity.Post;
+import com.spring.blog.sprinapi.exception.BlogApiException;
 import com.spring.blog.sprinapi.payload.CommentDto;
 import com.spring.blog.sprinapi.repository.CommentRepository;
 import com.spring.blog.sprinapi.repository.PostRepository;
 import com.spring.blog.sprinapi.service.CommentService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.spring.blog.sprinapi.exception.ResourceNotFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -42,7 +47,36 @@ public class CommentServiceImpl implements CommentService {
         return matToDto(newComment);
     }
 
+    @Override
+    public List<CommentDto> getCommentsByPostId(long postId) {
 
+        //buscar os comentarios pelo id do post
+        List<Comment> comments = commentRepository.findByPostId(postId);
+
+        //transformar cada obj do array em um obj de requisição
+        return comments.stream().map( comment -> matToDto(comment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDto getCommentById(long postId, long commentId) {
+
+        //buscar o posto que contem esse comentario
+        Post post = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId) );
+
+        //buscar o comentario no banco
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new ResourceNotFoundException("Comment", "id", commentId));
+
+        System.out.println(comment.getPost());
+        System.out.println(comment.getPost().getId());
+        System.out.println(post.getId());
+
+        //verifica se o ID do post do comentário é igual ao ID do post fornecido
+        if(!comment.getPost().getId().equals(post.getId())){
+            throw new BlogApiException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+        }
+
+        return matToDto(comment);
+    }
 
 
     //metodos para converter os objtos de requisição
