@@ -12,4 +12,8 @@ public interface CommentService {
     List<CommentDto> getCommentsByPostId(long postId);
 
     CommentDto getCommentById(long postId, long commentId);
+
+    CommentDto updateComment(long postId, long commentId, CommentDto commentRequest);
+
+    void deleteComment(long postId, long commentId);
 }

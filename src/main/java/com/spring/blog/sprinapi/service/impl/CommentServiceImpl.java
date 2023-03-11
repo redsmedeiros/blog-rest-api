@@ -78,6 +78,48 @@ public class CommentServiceImpl implements CommentService {
         return matToDto(comment);
     }
 
+    @Override
+    public CommentDto updateComment(long postId, long commentId, CommentDto commentRequest) {
+
+        //pegar a postagem do comentario no banco atraves do id
+        Post post = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId));
+
+        //pegar o comentario atraves do id
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId) );
+
+        //verificar se o comentario pertence a postagem
+        if(!comment.getPost().getId().equals(post.getId())){
+            throw new BlogApiException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+        }
+
+        //atualizar o objeto de comentarios
+        comment.setName(commentRequest.getName());
+        comment.setEmail(commentRequest.getEmail());
+        comment.setBody(commentRequest.getBody());
+
+        //salvar no banco
+        Comment commentUpdate = commentRepository.save(comment);
+
+        return matToDto(commentUpdate);
+    }
+
+    @Override
+    public void deleteComment(long postId, long commentId) {
+
+        //buscar o post no banco através do id
+        Post post = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId) );
+
+        //buscar o comentario no banco atraves do id
+        Comment comment = commentRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "id", postId));
+
+        //verificar se o comentario pertence ao id
+        if(!comment.getPost().getId().equals(post.getId())){
+            throw new BlogApiException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+        }
+
+        commentRepository.delete(comment);
+    }
+
 
     //metodos para converter os objtos de requisição
     private CommentDto matToDto(Comment comment){

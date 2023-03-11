@@ -38,4 +38,20 @@ public class CommentController {
 
         return new ResponseEntity<>(commentDto, HttpStatus.OK);
     }
+
+    @PutMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable(value = "postId") long postId, @PathVariable(value = "commentId") long commentId, @RequestBody CommentDto commentDto){
+
+        CommentDto updateComment = commentService.updateComment(postId, commentId, commentDto );
+
+        return new ResponseEntity<>(updateComment, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable(value = "postId") long postId, @PathVariable(value = "commentId") long commentId){
+
+        commentService.deleteComment(postId, commentId);
+
+        return new ResponseEntity<>("Comment deleted", HttpStatus.OK);
+    }
 }
