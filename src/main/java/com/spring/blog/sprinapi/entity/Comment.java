@@ -1,5 +1,6 @@
 package com.spring.blog.sprinapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class Comment {
 
     //instanciar a classe de Posts
     @ManyToOne(fetch = FetchType.LAZY) //multiplos comentarios pertence a uma postagem
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false, referencedColumnName = "id")
+    @JsonIgnoreProperties({"comments"})
     private Post post;
 }

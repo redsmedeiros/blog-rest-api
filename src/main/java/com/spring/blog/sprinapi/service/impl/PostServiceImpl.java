@@ -16,14 +16,18 @@ import com.spring.blog.sprinapi.payload.PostResponse;
 import com.spring.blog.sprinapi.repository.PostRepository;
 import com.spring.blog.sprinapi.service.PostService;
 import com.spring.blog.sprinapi.exception.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
 
 @Service
 public class PostServiceImpl implements PostService {
 
     private PostRepository postRepository;
 
-    public PostServiceImpl(PostRepository postRepository){
+    private ModelMapper modelMapper;
+
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper){
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper; 
     }
 
     @Override
@@ -105,12 +109,7 @@ public class PostServiceImpl implements PostService {
     //metodo para converter o entity em dto
     private PostDto matToDto(Post post){
 
-        PostDto postDto = new PostDto();
-
-        postDto.setId(post.getId());
-        postDto.setContent(post.getContent());
-        postDto.setDescription(post.getDescription());
-        postDto. setTitle(post.getTitle());
+        PostDto postDto = modelMapper.map(post, PostDto.class);
 
         return postDto;
 
@@ -119,12 +118,7 @@ public class PostServiceImpl implements PostService {
     //metodo para converter dto em entity
     private Post mapToEntity(PostDto postDto){
 
-        //instanciar novo objto post
-        Post post = new Post();
-        //colocar os valores no objtos usando o dto
-        post.setTitle(postDto.getTitle());
-        post.setDescription(postDto.getDescription());
-        post.setContent(postDto.getContent());
+        Post post = modelMapper.map(postDto, Post.class);
 
         return post;
 
